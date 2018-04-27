@@ -2,23 +2,39 @@ package driver;
 
 import java.util.Scanner;
 import lexer.*;
+import java.io.*;
 
 public class Main {
-	public static void main(String[] args) {
-	Scanner s = new Scanner (System.in);
-	String str = "PROGRAM BASICS\n" + 
-			" VAR\n" + 
-			" X,Y,B,N,M,Z,A,C\n" + 
-			" BEGIN\n" + 
-			" READ(X,Y,Z,B)\n" + 
-			" WRITE(A,C,Z)\n" + 
-			"A = X+B;\n" + 
-			"C = X+ Z;\n" + 
-			"C = C * B;\n" + 
-			"Z = A+B+C+Y;\n" + 
-			"END.";
-	Lexer test = new Lexer(str);
-	
+	public static String readAFile(String str) throws IOException {
+		String fileName = str + ".txt";
+		String line = null;
+		String fullString = "";
+
+		try {
+			// FileReader reads text files in the default encoding.
+			FileReader fileReader = new FileReader(fileName);
+			// Always wrap FileReader in BufferedReader.
+			BufferedReader bufferedReader = new BufferedReader(fileReader);
+
+			while ((line = bufferedReader.readLine()) != null) {
+				fullString = fullString.concat(line);
+				fullString = fullString.concat("\n");
+			}
+			System.out.println(fullString);
+			// Always close files.
+			bufferedReader.close();
+		} catch (FileNotFoundException ex) {
+			System.out.println("Unable to open file '" + fileName + "'");
+		} catch (IOException ex) {
+			System.out.println("Error reading file '" + fileName + "'");
+			// Or we could just do this:
+			// ex.printStackTrace();
+		}
+		return (fullString);
+
 	}
 
+	public static void main(String[] args) throws IOException {
+		new Lexer(readAFile("temp"));
+	}
 }
