@@ -20,7 +20,6 @@ public class Main {
 				fullString = fullString.concat(line);
 				fullString = fullString.concat("\n");
 			}
-			System.out.println(fullString);
 			// Always close files.
 			bufferedReader.close();
 		} catch (FileNotFoundException ex) {
