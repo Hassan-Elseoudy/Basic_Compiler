@@ -18,7 +18,7 @@ public class Lexer {
 
 	// -----------------------------------------------------------------------------------------------
 	public static HashMap<String, Integer> hsn = new HashMap<String, Integer>(); // Identifiers + Reserved words
-	static ArrayList<String> tokens = new ArrayList<String>();
+	public static ArrayList<String> tokens = new ArrayList<String>();
 	// -----------------------------------------------------------------------------------------------
 
 	@SuppressWarnings("unchecked")
@@ -57,8 +57,8 @@ public class Lexer {
 				tempString = "";
 			}
 		}
-		for (int i = 0; i < tokens.size(); i++)
-			System.out.println(tokens.get(i));
-        hsn.forEach((key, value) -> System.out.println(key + " : " + value));
+//		for (int i = 0; i < tokens.size(); i++)
+//			System.out.println(tokens.get(i));
+//        hsn.forEach((key, value) -> System.out.println(key + " : " + value));
 	}
 }

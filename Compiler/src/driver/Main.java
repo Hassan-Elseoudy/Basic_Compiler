@@ -1,13 +1,13 @@
 package driver;
 
 import lexer.*;
+import parser.*;
 import java.io.*;
 
 public class Main {
 	public static void readAFile(String str) throws IOException {
 		String fileName = str + ".txt";
 		String line = null;
-		String fullString = "";
 
 		try {
 			// FileReader reads text files in the default encoding.
@@ -24,13 +24,13 @@ public class Main {
 			System.out.println("Unable to open file '" + fileName + "'");
 		} catch (IOException ex) {
 			System.out.println("Error reading file '" + fileName + "'");
-			// Or we could just do this:
-			// ex.printStackTrace();
 		}
 	}
 
 	public static void main(String[] args) throws IOException {
 		new Lexer();
 		readAFile("temp");
+		System.out.println(Parser.isProg(Lexer.tokens));
+		//PROGRAM
 	}
 }
