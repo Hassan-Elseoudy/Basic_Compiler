@@ -1,11 +1,10 @@
 package driver;
 
-import java.util.Scanner;
 import lexer.*;
 import java.io.*;
 
 public class Main {
-	public static String readAFile(String str) throws IOException {
+	public static void readAFile(String str) throws IOException {
 		String fileName = str + ".txt";
 		String line = null;
 		String fullString = "";
@@ -17,8 +16,7 @@ public class Main {
 			BufferedReader bufferedReader = new BufferedReader(fileReader);
 
 			while ((line = bufferedReader.readLine()) != null) {
-				fullString = fullString.concat(line);
-				fullString = fullString.concat("\n");
+				Lexer.read(line);
 			}
 			// Always close files.
 			bufferedReader.close();
@@ -29,11 +27,10 @@ public class Main {
 			// Or we could just do this:
 			// ex.printStackTrace();
 		}
-		return (fullString);
-
 	}
 
 	public static void main(String[] args) throws IOException {
-		new Lexer(readAFile("temp"));
+		new Lexer();
+		readAFile("temp");
 	}
 }
