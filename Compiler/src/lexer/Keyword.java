@@ -26,7 +26,7 @@ public class Keyword {
 		reserve(new Keyword(11, ";"));
 		reserve(new Keyword(12, "="));
 		reserve(new Keyword(13, "+"));
-		//reserve(new Keyword(14, "HSN"));
+		reserve(new Keyword(14, ","));
 		reserve(new Keyword(15, "("));
 		reserve(new Keyword(16, ")"));
 		reserve(new Keyword(18, "*"));

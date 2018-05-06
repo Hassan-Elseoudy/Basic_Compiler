@@ -14,12 +14,13 @@ public class Main {
 			FileReader fileReader = new FileReader(fileName);
 			// Always wrap FileReader in BufferedReader.
 			BufferedReader bufferedReader = new BufferedReader(fileReader);
-
+			PrintWriter writer = new PrintWriter("Lexical_Analysis_Table.txt", "UTF-8");
 			while ((line = bufferedReader.readLine()) != null) {
-				Lexer.read(line);
+				writer.println(Lexer.read(line));
 			}
 			// Always close files.
 			bufferedReader.close();
+			writer.close();
 		} catch (FileNotFoundException ex) {
 			System.out.println("Unable to open file '" + fileName + "'");
 		} catch (IOException ex) {
@@ -29,8 +30,7 @@ public class Main {
 
 	public static void main(String[] args) throws IOException {
 		new Lexer();
-		readAFile("temp");
-		System.out.println(Parser.isProg(Lexer.tokens));
-		//PROGRAM
+		readAFile("Prog");
+		System.out.println("Status : " + Parser.isProg(Lexer.tokens));
 	}
 }

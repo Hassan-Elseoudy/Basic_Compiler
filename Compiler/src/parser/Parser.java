@@ -61,8 +61,7 @@ public class Parser {
 						if (arr.get(index).equals("BEGIN")) {
 							index++;
 							if (isStmtList(arr)) {
-								index++;
-								if (arr.get(index).equals("END"))
+								if (arr.get(index).equals("END."))
 									found = true;
 							}
 						}
@@ -73,23 +72,20 @@ public class Parser {
 		return found;
 	}
 
+	@SuppressWarnings("unused")
 	static Boolean isStmtList(ArrayList<String> arr) {
 		boolean found = false;
 		boolean chckr = false;
 		if (isStmt(arr)) {
 			found = true;
-			while ((chckr = isStmt(arr) && !arr.get(index).equals("END.")) || found) {
-				if (!chckr && !arr.get(index).equals("END."))
-					found = false;
-				if(!found)
-					return found;
+			while ((chckr = isStmt(arr) && !arr.get(index).equals("END.")) && found) {
 			}
+			if (index != arr.size() - 1)
+				found = false;
 		}
 		return found;
 	}
 
-	// READ -> 24
-	// WRITE -> 24
 	static Boolean isStmt(ArrayList<String> arr) {
 		boolean found = false;
 		if (isRead(arr)) {
@@ -108,12 +104,15 @@ public class Parser {
 	static Boolean isIDList(ArrayList<String> arr) {
 		boolean found = false;
 		if (Lexer.hsn.get(arr.get(index)) == 17) {
+			if(!arr.get(index).toString().matches("[a-zA-Z ][a-zA-Z 0-9]*"))
+				return false;
 			found = true;
 			index++;
-			// id ,(id)
 			while (arr.get(index).equals(",") && found) {
 				index++;
 				if (Lexer.hsn.get(arr.get(index)) == 17) {
+					if(!arr.get(index).toString().matches("[a-zA-Z ][a-zA-Z 0-9]*"))
+						return false;
 					index++;
 				} else {
 					found = false;
@@ -131,12 +130,11 @@ public class Parser {
 			if (Lexer.hsn.get(arr.get(index)) == 12) {
 				index++;
 				if (isExp(arr)) {
-					//index++;
+					// index++;
 					if (arr.get(index).equals(";")) {
 						found = true;
 						index++;
-					}
-					else 
+					} else
 						found = false;
 				}
 			}

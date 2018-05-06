@@ -1,24 +1,14 @@
 package lexer;
 
-import java.util.regex.Pattern;
-import java.util.regex.Matcher;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Lexer {
-	static String identifier = ("[a-zA-Z ][a-zA-Z 0-9]*");
-	static String op = ("\\s*([a-zA-Z0-9_\\(\\)\\,\\;\\:\\s\\=\\+\\*]*)\\s*");
-	static String read = ("\\s*READ\\(([a-zA-Z_][a-zA-Z0-9_]*(?:\\,[a-zA-Z_][a-zA-Z0-9_]*)*)\\)\\s*");
-	static Pattern readPattern = Pattern.compile(read);
-	static String write = ("\\s*WRITE\\(([a-zA-Z_][a-zA-Z0-9_]*(?:\\,[a-zA-Z_][a-zA-Z0-9_]*)*)\\)\\s*");
-	static Pattern writePattern = Pattern.compile(write);
-	static Pattern strings = Pattern.compile("\\s*([a-zA-Z0-9_\\(\\)\\,\\;\\:\\s\\=\\+\\*]*)\\s*");
-	static Pattern correct = Pattern.compile(
-			"\\s*PROGRAM\\s*([a-zA-Z_][a-zA-Z0-9_]*)\\s*VAR\\s*([a-zA-Z_][a-zA-Z0-9_]*(?:\\,[a-zA-Z_][a-zA-Z0-9_]*)*)\\s*BEGIN\\s*([a-zA-Z0-9_\\(\\)\\,\\;\\:\\s\\=\\+\\*]*)\\s*END.");
 
 	// -----------------------------------------------------------------------------------------------
 	public static HashMap<String, Integer> hsn = new HashMap<String, Integer>(); // Identifiers + Reserved words
 	public static ArrayList<String> tokens = new ArrayList<String>();
+	public static int counter = 1;
 	// -----------------------------------------------------------------------------------------------
 
 	@SuppressWarnings("unchecked")
@@ -28,9 +18,9 @@ public class Lexer {
 
 	}
 
-	public static void read(String s) {
-		System.out.println(s);
+	public static String read(String s) {
 		String tempString = "";
+		StringBuilder str = new StringBuilder("");
 		s = s.replaceFirst("\\s+", "");
 		String[] arrayOfStrings = s.split("\\s+");
 		for (int i = 0; i < arrayOfStrings.length; i++) {
@@ -45,20 +35,29 @@ public class Lexer {
 						if (!hsn.containsKey(tempString))
 							hsn.put(tempString, 17);
 						tokens.add(tempString);
+						// For table file
+						str = str.append(counter + "\t" + tempString + "\t" + hsn.get(tempString)
+								+ System.getProperty("line.separator"));
 						tempString = "";
 					}
 					tokens.add(Character.toString(arrayOfStrings[i].charAt(j)));
+					// For table file
+					str = str.append(counter + "\t" + Character.toString(arrayOfStrings[i].charAt(j)) + "\t"
+							+ hsn.get(Character.toString(arrayOfStrings[i].charAt(j)))
+							+ System.getProperty("line.separator"));
 				}
 			}
 			if (!tempString.isEmpty()) {
 				if (!hsn.containsKey(tempString))
 					hsn.put(tempString, 17);
 				tokens.add(tempString);
+				// For table file
+				str = str.append(counter + "\t" + tempString + "\t" + hsn.get(tempString)
+						+ System.getProperty("line.separator"));
 				tempString = "";
 			}
 		}
-//		for (int i = 0; i < tokens.size(); i++)
-//			System.out.println(tokens.get(i));
-//        hsn.forEach((key, value) -> System.out.println(key + " : " + value));
+		counter++;
+		return str.toString();
 	}
 }
