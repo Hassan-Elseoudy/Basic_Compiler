@@ -8,7 +8,6 @@ public class Keyword {
 	public static HashMap<String, Integer> mernaya = new HashMap<String, Integer>(); // Reserved words
 
 	private static void reserve(Keyword k) {
-		// System.out.println(Keyword.lexeme);
 		mernaya.put(Keyword.lexeme, Keyword.valu);
 	}
 
@@ -30,8 +29,9 @@ public class Keyword {
 		reserve(new Keyword(15, "("));
 		reserve(new Keyword(16, ")"));
 		reserve(new Keyword(18, "*"));
+		reserve(new Keyword(19, "-"));
+		reserve(new Keyword(20, "/"));
 	}
-
 
 	public Keyword(int valu, String lexeme) {
 		Keyword.valu = valu;

@@ -28,9 +28,24 @@ public class Main {
 		}
 	}
 
+	public static void whenWriteStringUsingBufferedWritter_thenCorrect(String str) throws IOException {
+		BufferedWriter writer = new BufferedWriter(new FileWriter("IntermediateFile.txt"));
+		String lines[] = str.split("\r|\n");
+		for (int i = 0; i < lines.length; i++) {
+			writer.write(lines[i]);
+			writer.newLine();
+		}
+		writer.close();
+	}
+
 	public static void main(String[] args) throws IOException {
-		new Lexer();
-		readAFile("Prog");
-		System.out.println("Status : " + Parser.isProg(Lexer.tokens));
+		new Lexer(); // For reserving keywords
+		readAFile("Prog"); // Reading Simplified Langugae file
+		if (Parser.isProg(Lexer.tokens)) { // Parsing file based on (Lexical Analysis tokens)
+			whenWriteStringUsingBufferedWritter_thenCorrect(Parser.isProgStr);
+			System.out.println(Parser.isProgStr);
+		}
+		else 
+			System.out.println("Enta btd7k 3lya w md5lly program 8lt, bs 2f4tk :D");
 	}
 }

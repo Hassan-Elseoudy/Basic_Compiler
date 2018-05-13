@@ -28,7 +28,8 @@ public class Lexer {
 				if ((arrayOfStrings[i].charAt(j) != '(' && arrayOfStrings[i].charAt(j) != ')'
 						&& arrayOfStrings[i].charAt(j) != ',' && arrayOfStrings[i].charAt(j) != ';'
 						&& arrayOfStrings[i].charAt(j) != '*' && arrayOfStrings[i].charAt(j) != '+'
-						&& arrayOfStrings[i].charAt(j) != '=')) {
+						&& arrayOfStrings[i].charAt(j) != '=' && arrayOfStrings[i].charAt(j) != '-'
+						&& arrayOfStrings[i].charAt(j) != '/')) {
 					tempString = tempString.concat(Character.toString(arrayOfStrings[i].charAt(j)));
 				} else {
 					if (!tempString.isEmpty()) {

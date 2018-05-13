@@ -1,21 +1,34 @@
 package parser;
 
 import java.util.ArrayList;
+
 import lexer.Lexer;
+import parser.CodeGenerator;
 
 public class Parser {
-
-	public static int index = 0;
+	private static int index = 0;
+	private static int idListIndex = 0; 		// for idList
+	private static int tempIndex = 0;  			// to save start index for every function
+	private static String str = "";				// to get any function's return
+	private static Boolean flagIdList = false;  // to take IdList once
+	private static Boolean flagSmsm = false;	
+	public static String isProgStr = ""; 	    // to save all the prog
+	private static String isIdStr = "";
+	public static ArrayList<String> temp = new ArrayList<String>();
 
 	static Boolean isRead(ArrayList<String> arr) {
 		boolean found = false;
+		if(!flagSmsm)
+			str+="SMSM ";
 		if (arr.get(index).equals("READ")) {
+			tempIndex = index;
 			index++;
 			if (arr.get(index).equals("(")) {
 				index++;
 				if (isIDList(arr)) {
 					if (arr.get(index).equals(")")) {
 						found = true;
+						str += CodeGenerator.codeIsRead(arr, tempIndex, index);
 						index++;
 					}
 				}
@@ -26,13 +39,17 @@ public class Parser {
 
 	static Boolean isWrite(ArrayList<String> arr) {
 		boolean found = false;
+		if(!flagSmsm)
+			str+="SMSM ";
 		if (arr.get(index).equals("WRITE")) {
+			tempIndex = index;
 			index++;
 			if (arr.get(index).equals("(")) {
 				index++;
 				if (isIDList(arr)) {
 					if (arr.get(index).equals(")")) {
 						found = true;
+						str += CodeGenerator.codeIsWrite(arr, tempIndex, index) + "\n";
 						index++;
 					}
 				}
@@ -41,9 +58,11 @@ public class Parser {
 		return found;
 	}
 
-	static Boolean isprogName(ArrayList<String> arr) {
+	static Boolean isProgName(ArrayList<String> arr) {
 		boolean found = false;
 		if (Lexer.hsn.get(arr.get(index)) == 17) {
+			if (!arr.get(index).toString().matches("[a-zA-Z ][a-zA-Z 0-9]*"))
+				return false;
 			found = true;
 		}
 		return found;
@@ -53,16 +72,25 @@ public class Parser {
 		boolean found = false;
 		if (arr.get(index).equals("PROGRAM")) {
 			index++;
-			if (isprogName(arr)) {
+			if (isProgName(arr)) {
 				index++;
 				if (arr.get(index).equals("VAR")) {
 					index++;
 					if (isIDList(arr)) {
+						flagIdList = true;		// to save ID Lists
 						if (arr.get(index).equals("BEGIN")) {
 							index++;
 							if (isStmtList(arr)) {
-								if (arr.get(index).equals("END."))
+								if (arr.get(index).equals("END.")) {
+									isProgStr = CodeGenerator.codeIsProg(arr, 0, 1);
+									isProgStr = isProgStr.concat(isIdStr);
+									isProgStr = isProgStr.concat(str);
+									isProgStr = isProgStr.replaceAll("\n", "");
+									for(int i = 0; i < InfixToPostfix.saveTemps.size(); i++)
+										isProgStr += InfixToPostfix.saveTemps.get(i) + " RESW" + " 1\n";
+									isProgStr +="END.";
 									found = true;
+								}
 							}
 						}
 					}
@@ -72,9 +100,9 @@ public class Parser {
 		return found;
 	}
 
-	@SuppressWarnings("unused")
 	static Boolean isStmtList(ArrayList<String> arr) {
 		boolean found = false;
+		@SuppressWarnings("unused")
 		boolean chckr = false;
 		if (isStmt(arr)) {
 			found = true;
@@ -90,12 +118,15 @@ public class Parser {
 		boolean found = false;
 		if (isRead(arr)) {
 			found = true;
+			flagSmsm = true;
 			return found;
 		} else if (isWrite(arr)) {
 			found = true;
+			flagSmsm = true;
 			return found;
 		} else if (isAssign(arr)) {
 			found = true;
+			flagSmsm = true;
 			return found;
 		} else
 			return found;
@@ -103,15 +134,16 @@ public class Parser {
 
 	static Boolean isIDList(ArrayList<String> arr) {
 		boolean found = false;
+		idListIndex = index;
 		if (Lexer.hsn.get(arr.get(index)) == 17) {
-			if(!arr.get(index).toString().matches("[a-zA-Z ][a-zA-Z 0-9]*"))
+			if (!arr.get(index).toString().matches("[a-zA-Z ][a-zA-Z 0-9]*"))
 				return false;
 			found = true;
 			index++;
 			while (arr.get(index).equals(",") && found) {
 				index++;
 				if (Lexer.hsn.get(arr.get(index)) == 17) {
-					if(!arr.get(index).toString().matches("[a-zA-Z ][a-zA-Z 0-9]*"))
+					if (!arr.get(index).toString().matches("[a-zA-Z ][a-zA-Z 0-9]*"))
 						return false;
 					index++;
 				} else {
@@ -119,20 +151,24 @@ public class Parser {
 				}
 			}
 		}
+		if(!flagIdList)
+		isIdStr += CodeGenerator.codeIsIdList(arr, idListIndex, index - 1) + "\n"; // Before "BEGIN"
 		return found;
 	}
 
-	// A = A + B;
 	static Boolean isAssign(ArrayList<String> arr) {
 		boolean found = false;
+		if(!flagSmsm)
+			str+="SMSM ";
+		tempIndex = index;
 		if (Lexer.hsn.get(arr.get(index)) == 17) {
 			index++;
 			if (Lexer.hsn.get(arr.get(index)) == 12) {
 				index++;
 				if (isExp(arr)) {
-					// index++;
 					if (arr.get(index).equals(";")) {
 						found = true;
+						str += CodeGenerator.codeIsStmt(arr, tempIndex, index); // Including the ;
 						index++;
 					} else
 						found = false;
@@ -146,7 +182,7 @@ public class Parser {
 		boolean found = false;
 		if (isTerm(arr)) {
 			found = true;
-			while (arr.get(index).equals("+") && found) {
+			while ((arr.get(index).equals("+") || (arr.get(index).equals("-"))) && found) {
 				index++;
 				if (!isTerm(arr)) {
 					found = false;
@@ -160,7 +196,7 @@ public class Parser {
 		boolean found = false;
 		if (isFactor(arr)) {
 			found = true;
-			while (arr.get(index).equals("*") && found) {
+			while ((arr.get(index).equals("*") ||  (arr.get(index).equals("/"))) && found) {
 				index++;
 				if (!isFactor(arr)) {
 					found = false;
@@ -188,4 +224,5 @@ public class Parser {
 		}
 		return found;
 	}
+
 }
