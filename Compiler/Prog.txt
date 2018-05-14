@@ -1,11 +1,16 @@
- PROGRAM BASICS
- VAR
- X,Y,A,B,C,Z
- BEGIN
- READ(X,Y,Z,B)
- A = X+B;
- C = X/ Z;
- C = C - B;
- Z = A+B+C+Y;
- WRITE(A,C,Z)
- END.
+PROGRAM SUMPROG
+VAR
+  N,SUM,I,M,J
+BEGIN 
+READ(N,M)
+SUM= 0; 
+FOR I= J TO N DO 
+   BEGIN
+ FOR J= I TO M DO
+   BEGIN
+     SUM = SUM + I*J;
+   END
+ END
+WRITE(SUM)
+END. 
+ 

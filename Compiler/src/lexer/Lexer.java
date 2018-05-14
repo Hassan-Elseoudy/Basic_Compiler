@@ -21,7 +21,6 @@ public class Lexer {
 	public static String read(String s) {
 		String tempString = "";
 		StringBuilder str = new StringBuilder("");
-		s = s.replaceFirst("\\s+", "");
 		String[] arrayOfStrings = s.split("\\s+");
 		for (int i = 0; i < arrayOfStrings.length; i++) {
 			for (int j = 0; j < arrayOfStrings[i].length(); j++) {
