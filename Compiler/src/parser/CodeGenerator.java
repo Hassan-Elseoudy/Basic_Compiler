@@ -10,16 +10,16 @@ public class CodeGenerator {
 		int countIdList = 0;
 		ArrayList<String> temp = new ArrayList<String>();
 		str = "";
-		str = str.concat("+JSUB XREAD" + System.getProperty("line.separator"));
+		str = str.concat("\t+JSUB\tXREAD" + System.getProperty("line.separator"));
 		for (int i = startIndex + 2; i < endIndex; i++) {
 			if (!arr.get(i).equals(",")) {
 				countIdList++;
 				temp.add(arr.get(i));
 			}
 		}
-		str = str.concat("WORD " + countIdList + System.getProperty("line.separator"));
+		str = str.concat("\tWORD " + countIdList + System.getProperty("line.separator"));
 		for (int i = 0; i < temp.size(); i++) {
-			str = str.concat("WORD " + temp.get(i) + System.getProperty("line.separator"));
+			str = str.concat("\tWORD " + temp.get(i) + System.getProperty("line.separator"));
 		}
 		return str;
 	}
@@ -28,16 +28,16 @@ public class CodeGenerator {
 		int countIdList = 0;
 		ArrayList<String> temp = new ArrayList<String>();
 		str = "";
-		str = str.concat("+JSUB XWRITE" + System.getProperty("line.separator"));
+		str = str.concat("\t+JSUB\tXWRITE\t" + System.getProperty("line.separator"));
 		for (int i = startIndex + 2; i < endIndex; i++) {
 			if (!arr.get(i).equals(",")) {
 				countIdList++;
 				temp.add(arr.get(i));
 			}
 		}
-		str = str.concat("WORD " + countIdList + System.getProperty("line.separator"));
+		str = str.concat("\tWORD\t" + countIdList + System.getProperty("line.separator"));
 		for (int i = 0; i < temp.size(); i++) {
-			str = str.concat("WORD " + temp.get(i) + System.getProperty("line.separator"));
+			str = str.concat("\tWORD\t" + temp.get(i) + System.getProperty("line.separator"));
 		}
 		return str.toString();
 	}
@@ -46,17 +46,17 @@ public class CodeGenerator {
 		boolean isWrite = false;
 		boolean isRead = false;
 		str = "";
-		str = str.concat(arr.get(endIndex) + " START" + " 0" + System.getProperty("line.separator"));
+		str = str.concat(arr.get(endIndex) + "\tSTART" + "\t0" + System.getProperty("line.separator"));
 		isWrite = arr.contains("WRITE");
 		isRead = arr.contains("READ");
 		if (isWrite && isRead)
-			str = str.concat("EXTREF XREAD,XWRITE" + System.getProperty("line.separator"));
+			str = str.concat("\tEXTREF\tXREAD,XWRITE" + System.getProperty("line.separator"));
 		else if (!isWrite && isRead)
-			str = str.concat("EXTREF XREAD" + System.getProperty("line.separator"));
+			str = str.concat("\tEXTREF\tXREAD" + System.getProperty("line.separator"));
 		else if (isWrite && !isRead)
-			str = str.concat("EXTREF XWRITE" + System.getProperty("line.separator"));
-		str = str.concat("STL RETADR" + System.getProperty("line.separator"));
-		str = str.concat("J" + " SMSM" + System.getProperty("line.separator"));
+			str = str.concat("\tEXTREF\tXWRITE" + System.getProperty("line.separator"));
+		str = str.concat("\tSTL\tRETADR\t" + System.getProperty("line.separator"));
+		str = str.concat("\tJ" + "\tSMSM" + System.getProperty("line.separator"));
 		return str.toString();
 	}
 
@@ -70,7 +70,7 @@ public class CodeGenerator {
 		}
 		for (int i = 0; i < temp.size(); i++) {
 			if (i != temp.size() - 1)
-				str = str.concat(temp.get(i) + " RESW " + "1" + System.getProperty("line.separator"));
+				str = str.concat(temp.get(i) + "\tRESW\t" + "1" + System.getProperty("line.separator"));
 		}
 		return str.toString();
 	}
@@ -85,7 +85,7 @@ public class CodeGenerator {
 		}
 		postfix = InfixToPostfix.convert(infix); // Get the postfix value of any statement..
 		str = str.concat(InfixToPostfix.evaluatePostfix(postfix));
-		str = str.concat("STA " + arr.get(startIndex) + System.getProperty("line.separator"));
+		str = str.concat("\tSTA\t" + arr.get(startIndex) + System.getProperty("line.separator"));
 		return str.toString();
 	}
 

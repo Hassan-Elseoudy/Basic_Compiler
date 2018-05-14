@@ -8,6 +8,8 @@ import lexer.Lexer;
 public class InfixToPostfix {
 
 	public static ArrayList<String> saveTemps = new ArrayList<String>();
+	private static int counter = 1;
+
 	/**
 	 * Checks if the input is operator or not
 	 * 
@@ -86,13 +88,13 @@ public class InfixToPostfix {
 	/**
 	 * Formats the input stack string
 	 * 
-	 * @param	 It is a stack converted to string
-	 * @return 	 formatted input
+	 * @param It
+	 *            is a stack converted to string
+	 * @return formatted input
 	 */
 	static String evaluatePostfix(ArrayList<String> exp) {
 		String str = ""; // to save All the things
-		int counter = 1;
-		String accumlator = "";
+		String accumlator = "Nothing new!";
 		// create a stack
 		Stack<String> stack = new Stack<>();
 
@@ -102,153 +104,160 @@ public class InfixToPostfix {
 
 			// If the scanned character is an operand (number here),
 			// push it to the stack.
-			if (Lexer.hsn.get(exp.get(i)) == 17)
-				stack.push(exp.get(i));
+			if (exp.size() == 1) // A = B
+			{
+				str += "\tLDA\t" + c + System.getProperty("line.separator");
+			} else {
 
-			// If the scanned character is an operator, pop two
-			// elements from stack apply the operator
-			else {
-				String val1 = stack.pop();
-				String val2 = stack.pop();
-				switch (c) {
-				case "+":
-					if (val1.equals(accumlator)) {
-						str += "ADD " + val2 + System.getProperty("line.separator");
-						if (i != exp.size() - 1) {
-							str += "STA " + "T" + counter + System.getProperty("line.separator");
-							stack.push("T" + counter);
-							accumlator = "T" + counter;
-							saveTemps.add(accumlator);
-							counter++;
-						}
-					} else {
-						if (val2.equals(accumlator)) {
-							str += "ADD " + val1 + System.getProperty("line.separator");
+				if (Lexer.hsn.get(exp.get(i)) == 17)
+					stack.push(exp.get(i));
+
+				// If the scanned character is an operator, pop two
+				// elements from stack apply the operator
+				else {
+					String val1 = stack.pop();
+					String val2 = stack.pop();
+					switch (c) {
+					case "+":
+						if (val1.equals(accumlator)) {
+							str += "\tADD\t" + val2 + System.getProperty("line.separator");
 							if (i != exp.size() - 1) {
-								str += "STA " + "T" + counter + System.getProperty("line.separator");
+								str += "\tSTA\t" + "T" + counter + System.getProperty("line.separator");
 								stack.push("T" + counter);
 								accumlator = "T" + counter;
 								saveTemps.add(accumlator);
 								counter++;
 							}
 						} else {
-							str += "LDA " + val1 + System.getProperty("line.separator");
-							str += "ADD " + val2 + System.getProperty("line.separator");
-							if (i != exp.size() - 1) {
-								str += "STA " + "T" + counter + System.getProperty("line.separator");
-								stack.push("T" + counter);
-								accumlator = "T" + counter;
-								saveTemps.add(accumlator);
-								counter++;
+							if (val2.equals(accumlator)) {
+								str += "\tADD\t" + val1 + System.getProperty("line.separator");
+								if (i != exp.size() - 1) {
+									str += "\tSTA\t" + "T" + counter + System.getProperty("line.separator");
+									stack.push("T" + counter);
+									accumlator = "T" + counter;
+									saveTemps.add(accumlator);
+									counter++;
+								}
+							} else {
+								str += "\tLDA\t" + val1 + System.getProperty("line.separator");
+								str += "\tADD\t" + val2 + System.getProperty("line.separator");
+								if (i != exp.size() - 1) {
+									str += "\tSTA\t" + "T" + counter + System.getProperty("line.separator");
+									stack.push("T" + counter);
+									accumlator = "T" + counter;
+									saveTemps.add(accumlator);
+									counter++;
+								}
 							}
 						}
-					}
-					break;
+						break;
 
-				case "-":
-					if (val1.equals(accumlator)) {
-						str += "SUB " + val2 + System.getProperty("line.separator");
-						if (i != exp.size() - 1) {
-							str += "STA " + "T" + counter + System.getProperty("line.separator");
-							stack.push("T" + counter);
-							accumlator = "T" + counter;
-							saveTemps.add(accumlator);
-							counter++;
-						}
-					} else {
-						if (val2.equals(accumlator)) {
-							str += "SUB " + val1 + System.getProperty("line.separator");
+					case "-":
+						if (val1.equals(accumlator)) {
+							str += "\tSUB\t" + val2 + System.getProperty("line.separator");
 							if (i != exp.size() - 1) {
-								str += "STA " + "T" + counter + System.getProperty("line.separator");
+								str += "\tSTA\t" + "T" + counter + System.getProperty("line.separator");
 								stack.push("T" + counter);
 								accumlator = "T" + counter;
 								saveTemps.add(accumlator);
 								counter++;
 							}
 						} else {
-							str += "LDA " + val1 + System.getProperty("line.separator");
-							str += "SUB " + val2 + System.getProperty("line.separator");
-							if (i != exp.size() - 1) {
-								str += "STA " + "T" + counter + System.getProperty("line.separator");
-								stack.push("T" + counter);
-								accumlator = "T" + counter;
-								saveTemps.add(accumlator);
-								counter++;
+							if (val2.equals(accumlator)) {
+								str += "\tSUB\t" + val1 + System.getProperty("line.separator");
+								if (i != exp.size() - 1) {
+									str += "\tSTA\t" + "T" + counter + System.getProperty("line.separator");
+									stack.push("T" + counter);
+									accumlator = "T" + counter;
+									saveTemps.add(accumlator);
+									counter++;
+								}
+							} else {
+								str += "\tLDA\t" + val1 + System.getProperty("line.separator");
+								str += "\tSUB\t" + val2 + System.getProperty("line.separator");
+								if (i != exp.size() - 1) {
+									str += "\tSTA\t" + "T" + counter + System.getProperty("line.separator");
+									stack.push("T" + counter);
+									accumlator = "T" + counter;
+									saveTemps.add(accumlator);
+									counter++;
+								}
 							}
 						}
-					}
-					break;
+						break;
 
-				case "/":
-					if (val1.equals(accumlator)) {
-						str += "DIV " + val2 + System.getProperty("line.separator");
-						if (i != exp.size() - 1) {
-							str += "STA " + "T" + counter + System.getProperty("line.separator");
-							stack.push("T" + counter);
-							accumlator = "T" + counter;
-							saveTemps.add(accumlator);
-							counter++;
-						}
-					} else {
-						if (val2.equals(accumlator)) {
-							str += "DIV " + val1 + System.getProperty("line.separator");
-							if (i != exp.size() - 1) {
-								str += "STA " + "T" + counter + System.getProperty("line.separator");
-								stack.push("T" + counter);
-								accumlator = "T" + counter;
-								saveTemps.add(accumlator);
-								counter++;
-							}
-						} else {
-							str += "LDA " + val1 + System.getProperty("line.separator");
+					case "/":
+						if (val1.equals(accumlator)) {
 							str += "DIV " + val2 + System.getProperty("line.separator");
 							if (i != exp.size() - 1) {
-								str += "STA " + "T" + counter + System.getProperty("line.separator");
-								stack.push("T" + counter);
-								accumlator = "T" + counter;
-								saveTemps.add(accumlator);
-								counter++;
-							}
-						}
-					}
-					break;
-
-				case "*":
-					if (val1.equals(accumlator)) {
-						str += "MUL " + val2 + System.getProperty("line.separator");
-						if (i != exp.size() - 1) {
-							str += "STA " + "T" + counter + System.getProperty("line.separator");
-							stack.push("T" + counter);
-							accumlator = "T" + counter;
-							saveTemps.add(accumlator);
-							counter++;
-						}
-					} else {
-						if (val2.equals(accumlator)) {
-							str += "MUL " + val1 + System.getProperty("line.separator");
-							if (i != exp.size() - 1) {
-								str += "STA " + "T" + counter + System.getProperty("line.separator");
+								str += "\tSTA\t" + "T" + counter + System.getProperty("line.separator");
 								stack.push("T" + counter);
 								accumlator = "T" + counter;
 								saveTemps.add(accumlator);
 								counter++;
 							}
 						} else {
-							str += "LDA " + val1 + System.getProperty("line.separator");
+							if (val2.equals(accumlator)) {
+								str += "\tDIV\t" + val1 + System.getProperty("line.separator");
+								if (i != exp.size() - 1) {
+									str += "\tSTA\t" + "T" + counter + System.getProperty("line.separator");
+									stack.push("T" + counter);
+									accumlator = "T" + counter;
+									saveTemps.add(accumlator);
+									counter++;
+								}
+							} else {
+								str += "\tLDA\t" + val1 + System.getProperty("line.separator");
+								str += "\tDIV\t" + val2 + System.getProperty("line.separator");
+								if (i != exp.size() - 1) {
+									str += "\tSTA\t" + "T" + counter + System.getProperty("line.separator");
+									stack.push("T" + counter);
+									accumlator = "T" + counter;
+									saveTemps.add(accumlator);
+									counter++;
+								}
+							}
+						}
+						break;
+
+					case "*":
+						if (val1.equals(accumlator)) {
 							str += "MUL " + val2 + System.getProperty("line.separator");
 							if (i != exp.size() - 1) {
-								str += "STA " + "T" + counter + System.getProperty("line.separator");
+								str += "\tSTA\t" + "T" + counter + System.getProperty("line.separator");
 								stack.push("T" + counter);
 								accumlator = "T" + counter;
 								saveTemps.add(accumlator);
 								counter++;
 							}
+						} else {
+							if (val2.equals(accumlator)) {
+								str += "\tMUL\t" + val1 + System.getProperty("line.separator");
+								if (i != exp.size() - 1) {
+									str += "\tSTA\t" + "T" + counter + System.getProperty("line.separator");
+									stack.push("T" + counter);
+									accumlator = "T" + counter;
+									saveTemps.add(accumlator);
+									counter++;
+								}
+							} else {
+								str += "\tLDA\t" + val1 + System.getProperty("line.separator");
+								str += "\tMUL\t" + val2 + System.getProperty("line.separator");
+								if (i != exp.size() - 1) {
+									str += "\tSTA\t" + "T" + counter + System.getProperty("line.separator");
+									stack.push("T" + counter);
+									accumlator = "T" + counter;
+									saveTemps.add(accumlator);
+									counter++;
+								}
+							}
 						}
+						break;
 					}
-					break;
 				}
 			}
 		}
+
 		return str;
 	}
 }

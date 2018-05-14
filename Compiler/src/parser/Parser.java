@@ -45,23 +45,23 @@ public class Parser {
 			tempIndex = index;
 			index++;
 			if (isIDList(arr)) {
-				if(arr.get(index).equals("=")) {
+				if (arr.get(index).equals("=")) {
 					index++;
-				if (isExp(arr)) {
-					if (arr.get(index).equals("TO")) {
-						index++;
-						if (isExp(arr)) {
-							if (arr.get(index).equals("DO")) {
-								index++;
-								if (isBody(arr)) {
-									found = true;
+					if (isExp(arr)) {
+						if (arr.get(index).equals("TO")) {
+							index++;
+							if (isExp(arr)) {
+								if (arr.get(index).equals("DO")) {
 									index++;
+									if (isBody(arr)) {
+										found = true;
+										index++;
+									}
 								}
 							}
 						}
 					}
 				}
-			}
 			}
 
 		}
@@ -74,12 +74,12 @@ public class Parser {
 		boolean chckr = false;
 		if (arr.get(index).equals("BEGIN")) {
 			index++;
-			if(isStmt(arr)) {
-			while ((chckr = isStmt(arr) && !arr.get(index).equals("END")) && found) {
-			}
-			if (arr.get(index).equals("END")) {
-				found = true;
-			}
+			if (isStmt(arr)) {
+				while ((chckr = isStmt(arr) && !arr.get(index).equals("END")) && found) {
+				}
+				if (arr.get(index).equals("END")) {
+					found = true;
+				}
 			}
 		}
 		return found;
@@ -121,7 +121,7 @@ public class Parser {
 		if (arr.get(index).equals("PROGRAM")) {
 			index++;
 			if (isProgName(arr)) {
-				index++;
+				index++; 
 				if (arr.get(index).equals("VAR")) {
 					index++;
 					if (isIDList(arr)) {
@@ -133,12 +133,12 @@ public class Parser {
 									isProgStr = CodeGenerator.codeIsProg(arr, 0, 1);
 									isProgStr = isProgStr.concat(isIdStr);
 									isProgStr = isProgStr.concat(str);
-									isProgStr = isProgStr.concat("LDL RETADR" + System.getProperty("line.separator")
-											+ "RSUB" + System.getProperty("line.separator"));
+									isProgStr = isProgStr.concat("\tLDL\tRETADR" + System.getProperty("line.separator")
+											+ "\tRSUB" + System.getProperty("line.separator"));
 									isProgStr = isProgStr.replaceAll("\n", "");
 									for (int i = 0; i < InfixToPostfix.saveTemps.size(); i++)
-										isProgStr += InfixToPostfix.saveTemps.get(i) + " RESW" + " 1\n";
-									isProgStr += "END " + (arr.get(1));
+										isProgStr += InfixToPostfix.saveTemps.get(i) + "\tRESW" + "\t1\n";
+									isProgStr += "\tEND\t" + (arr.get(1));
 									found = true;
 								}
 							}
@@ -182,8 +182,7 @@ public class Parser {
 			found = true;
 			flagSmsm = true;
 			return found;
-		}  
-		else
+		} else
 			return found;
 	}
 

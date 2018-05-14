@@ -1,16 +1,11 @@
-PROGRAM SUMPROG
-VAR
-  N,SUM,I,M,J
+PROGRAM HMINSEC
+VAR 
+  hours, convert_to , mins, secs, sixity
 BEGIN 
-READ(N,M)
-SUM= 0; 
-FOR I= J TO N DO 
-   BEGIN
- FOR J= I TO M DO
-   BEGIN
-     SUM = SUM + I*J;
-   END
- END
-WRITE(SUM)
+READ(hours)
+READ(convert_to) 
+mins = hours * sixity;
+secs = mins*sixity; 
+WRITE(mins,secs)
 END. 
  

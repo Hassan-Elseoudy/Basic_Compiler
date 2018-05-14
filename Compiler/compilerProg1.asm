@@ -1,0 +1,27 @@
+HMINSEC	START	0
+	EXTREF	XREAD,XWRITE
+	STL	RETADR	
+	J	SMSM
+hours	RESW	1
+convert_to	RESW	1
+mins	RESW	1
+secs	RESW	1
+SMSM 	+JSUB	XREAD
+	WORD 1
+	WORD hours
+	+JSUB	XREAD
+	WORD 1
+	WORD convert_to
+	LDA	sixity
+	MUL	hours
+	STA	mins
+	LDA	sixity
+	MUL	mins
+	STA	secs
+	+JSUB	XWRITE	
+	WORD	2
+	WORD	mins
+	WORD	secs
+	LDL	RETADR
+	RSUB
+	END	HMINSEC

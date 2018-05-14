@@ -1,70 +1,51 @@
 1	PROGRAM	1
-1	SUMPROG	17
+1	HMINSEC	17
 
 2	VAR	2
 
-3	N	17
+3	hours	17
 3	,	14
-3	SUM	17
+3	convert_to	17
 3	,	14
-3	I	17
+3	mins	17
 3	,	14
-3	M	17
+3	secs	17
 3	,	14
-3	J	17
+3	sixity	17
 
 4	BEGIN	3
 
 5	READ	7
 5	(	15
-5	N	17
-5	,	14
-5	M	17
+5	hours	17
 5	)	16
 
-6	SUM	17
-6	=	12
-6	0	17
-6	;	11
+6	READ	7
+6	(	15
+6	convert_to	17
+6	)	16
 
-7	FOR	6
-7	I	17
+7	mins	17
 7	=	12
-7	J	17
-7	TO	9
-7	N	17
-7	DO	10
+7	hours	17
+7	*	18
+7	sixity	17
+7	;	11
 
-8	BEGIN	3
+8	secs	17
+8	=	12
+8	mins	17
+8	*	18
+8	sixity	17
+8	;	11
 
-9	FOR	6
-9	J	17
-9	=	12
-9	I	17
-9	TO	9
-9	M	17
-9	DO	10
+9	WRITE	8
+9	(	15
+9	mins	17
+9	,	14
+9	secs	17
+9	)	16
 
-10	BEGIN	3
-
-11	SUM	17
-11	=	12
-11	SUM	17
-11	+	13
-11	I	17
-11	*	18
-11	J	17
-11	;	11
-
-12	END	4
-
-13	END	4
-
-14	WRITE	8
-14	(	15
-14	SUM	17
-14	)	16
-
-15	END.	5
+10	END.	5
 
 

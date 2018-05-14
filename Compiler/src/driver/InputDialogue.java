@@ -7,6 +7,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import assemblerSICXE.SICXE;
 import lexer.Lexer;
 import parser.Parser;
 
@@ -49,10 +50,13 @@ public class InputDialogue  {
 	public static void main(String[] args) throws IOException {
 		new Lexer(); // For reserving keywords
 		readAFile("Prog"); // Reading Simplified Langugae file
+		System.out.println("[LEXER] -- > Done");
 		if (Parser.isProg(Lexer.tokens)) { // Parsing file based on (Lexical Analysis tokens)
 			whenWriteStringUsingBufferedWritter_thenCorrect(Parser.isProgStr);
+			System.out.println("[ASM] --> Done");
+		//	SICXE.mainSICXE();
 		} else
-			System.out.println("Enta btd7k 3lya w md5lly program 8lt, bs 2f4tk :D");
+			System.out.println("-.-\"");
 
 	}
 }
